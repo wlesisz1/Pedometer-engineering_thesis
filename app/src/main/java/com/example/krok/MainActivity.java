@@ -2,57 +2,52 @@ package com.example.krok;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class MainActivity extends FragmentActivity implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener {
-    ViewPager viewPager;
-    SampleSQLiteDBHelper helpee;
-    FragmentPagerAdapter adapterViewPager;
-    private TextView mTextMessage;
-    private EditText Text;
-    private TextView mTextView;
-    private TextView mTextView2;
-    private TextView mTextView3;
-    private TextView mTextView4;
-    private TextView mTextView5;
-    private float presure;
-    private float presure_0;
-    private float step_C;
-    private float height;
-
+public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_main);
         getIntent().putExtra("cel_krok", "0");
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        SwipeAdapter swipeAdapter = new SwipeAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(swipeAdapter);
-
+        setContentView(R.layout.activity_main);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_bar);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            Fragment SelectedFragment = null;
+            switch (menuItem.getItemId()){
+                case R.id.nav_status:
+                    SelectedFragment = new Status_Activity();
+                    break;
+                case R.id.nav_wyc:
+                    SelectedFragment = new TripActivity();
+                    break;
+                case R.id.nav_sett:
+                    SelectedFragment = new Settings_Activity();
+                    break;
+            }
 
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    SelectedFragment).commit();
+
+            return true;
+        }
+    };
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public float getStep_C() {
-        return step_C;
-    }
-
-    public float getPresure() {
-        return presure;
-    }
-
-
 }

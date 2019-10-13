@@ -105,7 +105,7 @@ public class Page2 extends Fragment {
 
     public void Setchart() {
         db2helper = new SampleSQLiteDBHelper(getActivity());
-        mChart = (LineChart) getView().findViewById(R.id.linechart);
+        mChart = getView().findViewById(R.id.linechart);
         ArrayList<Entry> yValues = new ArrayList<>();
         Cursor cursor = db2helper.GetPomiar(getActivity());
         int bigg = 0;

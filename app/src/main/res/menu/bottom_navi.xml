@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:id="@+id/nav_status"
+        android:icon="@drawable/status_24dp"
+        android:title="Status"/>
+    <item android:id="@+id/nav_wyc"
+        android:icon="@drawable/wycieczki_24dp"
+        android:title="Wycieczki"/>
+    <item android:id="@+id/nav_sett"
+        android:icon="@drawable/settings_24dp"
+        android:title="Settings"/>
+</menu>

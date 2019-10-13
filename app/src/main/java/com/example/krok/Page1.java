@@ -265,10 +265,10 @@ public class Page1 extends Fragment {
 
     public void UstawWszystko() {
 
-        TextView textView7 = (TextView) getView().findViewById(R.id.textView7);
+        TextView textView7 = getView().findViewById(R.id.textView7);
         textView7.setText("Zrobiłeś dzisiaj już " + String.format("%.0f", step_C - Float.valueOf(todaysteps)) + " kroków. Twój cel to: " + max_s);
-        TextView textView9 = (TextView) getView().findViewById(R.id.textView9);
-        TextView textView10 = (TextView) getView().findViewById(R.id.textView10);
+        TextView textView9 = getView().findViewById(R.id.textView9);
+        TextView textView10 = getView().findViewById(R.id.textView10);
         textView9.setText("Aktualne ciśnienie: " + String.format("%.2f", presure) + "hPa");
         height = Math.round(SensorManager.getAltitude(presure_0, presure));
         textView10.setText("Wysokość: " + String.format("%.0f", height) + "m");
@@ -304,7 +304,7 @@ public class Page1 extends Fragment {
     public void SetPressure(JSONObject json) {
         try {
             JSONObject main = json.getJSONObject("main");
-            presure_0 = Float.parseFloat(main.getString((String) "pressure"));
+            presure_0 = Float.parseFloat(main.getString("pressure"));
         } catch (Exception e) {
             Log.e("Weather", "Field not found");
         }

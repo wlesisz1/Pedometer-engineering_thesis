@@ -97,8 +97,8 @@ public class Page3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.page3_layout, container, false);
-        final EditText edittext2 = (EditText) view.findViewById(R.id.editText2);
-        Button button5 = (Button) view.findViewById(R.id.button2);
+        final EditText edittext2 = view.findViewById(R.id.editText2);
+        Button button5 = view.findViewById(R.id.button2);
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
