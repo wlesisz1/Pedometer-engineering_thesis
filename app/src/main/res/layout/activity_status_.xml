@@ -35,18 +35,17 @@
 
 
         <TextView
+            android:id="@+id/steps_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Kroki"
-            android:textColor="#000000"
-            android:textSize="55dp">
+            android:textColor="#FFFF"
+            android:textSize="25dp">
+
 
         </TextView>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent" />
+
     </LinearLayout>
 </android.support.v7.widget.CardView>
     <android.support.v7.widget.CardView android:orientation="horizontal"
@@ -66,11 +65,12 @@
 
 
             <TextView
+                android:id="@+id/height_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Wysokość"
-                android:textSize="55dp"
-                android:textColor="#000000">
+                android:textSize="25dp"
+                android:textColor="#FFFF">
 
             </TextView>
         </LinearLayout>
@@ -92,11 +92,12 @@
 
 
             <TextView
+                android:id="@+id/map_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Mapa"
-                android:textSize="55dp"
-                android:textColor="#000000">
+                android:textSize="25dp"
+                android:textColor="#FFFF">
 
             </TextView>
         </LinearLayout>

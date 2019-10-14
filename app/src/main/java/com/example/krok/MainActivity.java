@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener, StepsHistory.OnFragmentInteractionListener, MapActual.OnFragmentInteractionListener,HHistory.OnFragmentInteractionListener, Settings_Activity.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener, StepsHistory.OnFragmentInteractionListener, MapActual.OnFragmentInteractionListener,HHistory.OnFragmentInteractionListener, Settings_Activity.OnFragmentInteractionListener,Status_Activity.OnFragmentInteractionListener{
  private long backPressedTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity  implements Page1.OnFragment
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_bar);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNav.setSelectedItemId(R.id.nav_status);
+
     }
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity  implements Page1.OnFragment
             switch (menuItem.getItemId()){
                 case R.id.nav_status:
                     SelectedFragment = new Status_Activity();
+
                     break;
                 case R.id.nav_wyc:
                     SelectedFragment = new TripActivity();
@@ -40,6 +43,9 @@ public class MainActivity extends AppCompatActivity  implements Page1.OnFragment
                 case R.id.nav_sett:
                     SelectedFragment = new Settings_Activity();
                     break;
+                    case R.id.default_activity_button:
+                        SelectedFragment = new Status_Activity();
+                        break;
             }
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
