@@ -21,6 +21,14 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public static final String KROKI_ID = "_id";
     public static final String KROKI_START = "start";
     public static final String KROKI_END = "_end";
+    public static final String TRIP_TABLE_NAME = "trips";
+    public static final String TRIP_ID = "_id";
+    public static final String TRIP_X = "_dimX";
+    public static final String TRIP_Y = "_dimY";
+    public static final String TRIP_STEP = "_step";
+    public static final String TRIP_HEIGHT = "_height";
+
+
     private static final int DATABASE_VERSION = 100;
 
     public SampleSQLiteDBHelper(Context context, SQLiteDatabase.CursorFactory factory) {
@@ -44,8 +52,18 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
                 + KROKI_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KROKI_START + " INTEGER, "
                 + KROKI_END + " INTEGER);");
-    }
 
+
+    }
+    public void CreateNewTrip(SQLiteDatabase sqLiteDatabase, String ID)
+    {
+    sqLiteDatabase.execSQL("create table " + TRIP_TABLE_NAME + ID + " ("
+            + TRIP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + TRIP_X + " INTEGER, "
+            + TRIP_Y + " INTEGER, "
+            + TRIP_HEIGHT + " INTEGER, "
+            + TRIP_STEP + " INTEGER);");
+    }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists " + SETTINGS_TABLE_NAME);
@@ -54,6 +72,27 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("drop table if exists " + KROKI_TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
+
+
+    public void AddPomiarTrip(Context context, String X, String Y, String ID, String HEIGHT, String STEP) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        int tsLong = (int) (System.currentTimeMillis() / 1000);
+        values.put(SampleSQLiteDBHelper.TRIP_ID, tsLong);
+        values.put(SampleSQLiteDBHelper.TRIP_X, Integer.valueOf(X));
+        values.put(SampleSQLiteDBHelper.TRIP_Y, Integer.valueOf(Y));
+        values.put(SampleSQLiteDBHelper.TRIP_HEIGHT, Integer.valueOf(HEIGHT));
+        values.put(SampleSQLiteDBHelper.TRIP_STEP, Integer.valueOf(STEP));
+        if (Integer.valueOf(HEIGHT)>0)
+            try {
+                database.insertOrThrow(SampleSQLiteDBHelper.TRIP_TABLE_NAME+ID, null, values);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+    }
+
 
     public void AddPomiar(Context context, String Height) {
         SQLiteDatabase database = this.getWritableDatabase();
