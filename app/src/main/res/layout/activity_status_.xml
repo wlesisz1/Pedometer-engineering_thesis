@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent">
+
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".Status_Activity">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
 <android.support.v7.widget.CardView
     android:layout_width="match_parent"
-    android:layout_height="150dp"
-    android:layout_margin="15dp"
+    android:layout_height="180dp"
 
+    android:layout_marginTop="20dp"
+    android:layout_marginHorizontal="10dp"
     >
 
     <LinearLayout
@@ -38,13 +50,15 @@
     </LinearLayout>
 </android.support.v7.widget.CardView>
     <android.support.v7.widget.CardView android:orientation="horizontal"
+
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_margin="15dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp"
 
         >
 
-        <LinearLayout
+        <LinearLayout   android:id="@+id/hhistory_card"
             android:background="@drawable/step_gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -54,7 +68,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kroki"
+                android:text="Wysokość"
                 android:textSize="55dp"
                 android:textColor="#000000">
 
@@ -62,13 +76,15 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
     <android.support.v7.widget.CardView android:orientation="horizontal"
+
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_margin="15dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp"
 
         >
 
-        <LinearLayout
+        <LinearLayout android:id="@+id/map_card"
             android:background="@drawable/step_gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -78,35 +94,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kroki"
+                android:text="Mapa"
                 android:textSize="55dp"
                 android:textColor="#000000">
 
             </TextView>
         </LinearLayout>
     </android.support.v7.widget.CardView>
-    <android.support.v7.widget.CardView android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_margin="15dp"
-
-        >
-
-        <LinearLayout
-            android:background="@drawable/step_gradient"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Kroki"
-                android:textSize="55dp"
-                android:textColor="#000000">
-
-            </TextView>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </TableLayout>
 </LinearLayout>
+
+</ScrollView>

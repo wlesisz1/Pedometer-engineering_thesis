@@ -8,13 +8,16 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener, StepsHistory.OnFragmentInteractionListener, MapActual.OnFragmentInteractionListener,HHistory.OnFragmentInteractionListener, Settings_Activity.OnFragmentInteractionListener{
+ private long backPressedTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,18 @@ public class MainActivity extends AppCompatActivity  implements Page1.OnFragment
         }
     };
 
+    @Override
+    public void onBackPressed() {
+
+        if (backPressedTime + 2000 > System.currentTimeMillis() || 0<getSupportFragmentManager().getBackStackEntryCount()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(getBaseContext(), "Dotknij ponownie żeby wyjść", Toast.LENGTH_LONG).show();
+        }
+        backPressedTime = System.currentTimeMillis();
+
+    }
     @Override
     public void onFragmentInteraction(Uri uri) {
 

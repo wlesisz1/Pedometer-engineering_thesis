@@ -11,13 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
-public class StepsHistory extends Fragment {
+public class HHistory extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public StepsHistory() {
+    public HHistory() {
         // Required empty public constructor
     }
 

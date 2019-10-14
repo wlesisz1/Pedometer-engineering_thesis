@@ -20,7 +20,7 @@
         android:layout_alignParentBottom="true"
 
         app:menu="@menu/bottom_navi"
-        app:itemIconTint="@color/colorPrimary"
+        app:itemIconTint="@color/menuColor"
         android:background="@color/colorPrimaryDark"/>
 
 </RelativeLayout>
