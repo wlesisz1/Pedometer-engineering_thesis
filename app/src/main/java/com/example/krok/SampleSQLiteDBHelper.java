@@ -6,6 +6,12 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.util.LogPrinter;
+import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "KROKO_BAZA4.db";
@@ -27,9 +33,14 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public static final String TRIP_Y = "_dimY";
     public static final String TRIP_STEP = "_step";
     public static final String TRIP_HEIGHT = "_height";
+    public static final String STEPS_TABLE_NAME = "steps";
+    public static final String STEPS_ID = "_id";
+    public static final String STEPS_DATE = "_date";
+    public static final String STEPS_STARTAMOUNT = "_start";
+    public static final String STEPS_ENDAMOUNT = "_end";
 
 
-    private static final int DATABASE_VERSION = 100;
+    private static final int DATABASE_VERSION = 106;
 
     public SampleSQLiteDBHelper(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -48,11 +59,14 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
                 + WYSOKO_TIME + " INTEGER, "
                 + WYSOKO_HEIGHT + " INTEGER);");
 
-        sqLiteDatabase.execSQL("create table " + KROKI_TABLE_NAME + " ("
-                + KROKI_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+        sqLiteDatabase.execSQL("create table " + KROKI_TABLE_NAME + " (" + KROKI_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + KROKI_START + " INTEGER, "
                 + KROKI_END + " INTEGER);");
-
+        sqLiteDatabase.execSQL("create table " + STEPS_TABLE_NAME + " ("
+                + STEPS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + STEPS_DATE + " TEXT, "
+                + STEPS_STARTAMOUNT + " INTEGER, "
+                + STEPS_ENDAMOUNT + " INTEGER);");
 
     }
     public void CreateNewTrip(SQLiteDatabase sqLiteDatabase, String ID)
@@ -70,6 +84,7 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("drop table if exists " + WYSOKO_TABLE_NAME);
         sqLiteDatabase.execSQL("drop table if exists " + KROKI_TABLE_NAME);
+        sqLiteDatabase.execSQL("drop table if exists " + STEPS_TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 
@@ -124,6 +139,42 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
 
     }
 
+    public void AddEndSTEP(Context context, String Steps) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SampleSQLiteDBHelper.KROKI_END, Integer.valueOf(Steps));
+        values.put(SampleSQLiteDBHelper.KROKI_START, Integer.valueOf(Steps));
+
+        try {
+            //Toast.makeText(context, values.get(SampleSQLiteDBHelper.WYSOKO_HEIGHT).toString(), Toast.LENGTH_SHORT).show();
+            database.insertOrThrow(SampleSQLiteDBHelper.STEPS_TABLE_NAME, null, values);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void AddStartSTEP(Context context, String Steps) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date dateWithoutTime = cal.getTime();
+        values.put(SampleSQLiteDBHelper.STEPS_DATE, dateWithoutTime.toString());
+        values.put(SampleSQLiteDBHelper.STEPS_STARTAMOUNT, Integer.valueOf(Steps));
+        values.put(SampleSQLiteDBHelper.STEPS_ENDAMOUNT, Integer.valueOf(Steps));
+        try {
+            Toast.makeText(context, dateWithoutTime.toString(), Toast.LENGTH_SHORT).show();
+
+            database.insertOrThrow(SampleSQLiteDBHelper.STEPS_TABLE_NAME, null, values);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public Cursor GetPomiar(Context context) {
         SQLiteDatabase database = this.getReadableDatabase();
@@ -148,7 +199,13 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
 
         database.execSQL("drop table if exists " + WYSOKO_TABLE_NAME);
         database.execSQL("drop table if exists " + KROKI_TABLE_NAME);
+        database.execSQL("drop table if exists " + STEPS_TABLE_NAME);
         onCreate(database);
+    }
+
+    public void ClearTrip(String ID) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.execSQL("drop table if exists " + TRIP_TABLE_NAME+ID);
     }
 }
 

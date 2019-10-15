@@ -1,5 +1,6 @@
 package com.example.krok;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,6 +52,7 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
 
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
@@ -124,12 +126,12 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
     SampleSQLiteDBHelper db2helper;
     Handler h = new Handler();
     Handler h2 = new Handler();
-    int delay = 3000; //1 second=1000 milisecond,
+    int delay = 1000; //1 second=1000 milisecond,
     Runnable runnable;
     Runnable runnable2;
     private float presure;
     private float presure_0;
-    private float step_C;
+    private int step_C;
     private String max_s;
     private float height;
     private String date = "0";
@@ -153,7 +155,7 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
             if (mStepOffset == 0) {
                 mStepOffset = event.values[0];
             }
-            step_C = event.values[0];
+            step_C = (int)event.values[0];
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY, 0);
             cal.set(Calendar.MINUTE, 0);
@@ -162,8 +164,8 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
             Date dateWithoutTime = cal.getTime();
             if (date == null || !date.equals(dateWithoutTime.toString())) {
                 date = dateWithoutTime.toString();
-                todaysteps = Float.toString(step_C);
-                save();
+                todaysteps = Integer.toString(step_C);
+             save();
             }
         }
     };
@@ -219,6 +221,7 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         PackageManager manager = getActivity().getPackageManager();
         boolean hasSTEPCOUNTER = manager.hasSystemFeature(PackageManager.FEATURE_SENSOR_STEP_COUNTER);
@@ -252,6 +255,7 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         mSensorManager = (SensorManager) getActivity().getSystemService(SENSOR_SERVICE);
         mPressureSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         mStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -276,8 +280,9 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
             max_s = main.getString("steps");
             date = main.getString("date");
             todaysteps = main.getString("todaysteps");
-            step_C = Float.valueOf(todaysteps + 0);
+            step_C = Integer.valueOf(todaysteps + 0);
         } catch (Exception e1) {
+            Log.println(Log.ASSERT,"onCreateView", e1.getMessage());
             e1.printStackTrace();
         }
         View view = inflater.inflate(R.layout.activity_status_, container, false);
@@ -333,9 +338,9 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
         h2.postDelayed(runnable2 = new Runnable() {
             public void run() {
                 updateData();
-                h2.postDelayed(runnable2, 3600000);
+                h2.postDelayed(runnable2, 1200000);
             }
-        }, 3600000);
+        }, 1200000);
     }
 
     public void UstawWszystko() {
@@ -409,8 +414,10 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
             jso.put("sys", sys);
             OutputStream os = new FileOutputStream(getActivity().getFilesDir() + "data.json");
             os.write(jso.toString().getBytes());
+            db2helper.AddStartSTEP(context, todaysteps);
 
         } catch (Exception e1) {
+            Log.println(Log.ASSERT,"save", e1.getMessage());
             e1.printStackTrace();
         }
     }

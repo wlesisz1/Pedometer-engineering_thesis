@@ -1,5 +1,6 @@
 package com.example.krok;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity  implements Page1.OnFragment
         BottomNavigationView bottomNav = findViewById(R.id.bottom_bar);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setSelectedItemId(R.id.nav_status);
+
+        startService(new Intent(this, MService.class));
 
     }
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
