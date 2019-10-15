@@ -187,6 +187,17 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
         return cursor;
 
     }
+    public Cursor GetPomiarSteps(Context context) {
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        //  Cursor res = database.rawQuery("SELECT * FROM " + SampleSQLiteDBHelper.WYSOKO_TABLE_NAME,null);
+        Cursor cursor = database.query(STEPS_TABLE_NAME, new String[]{STEPS_DATE, STEPS_ENDAMOUNT}, null, null, null, null, null);
+        //  Toast.makeText(context, res., Toast.LENGTH_SHORT).show();
+
+        //  database.close();
+        return cursor;
+
+    }
 
     public void Close() {
         SQLiteDatabase database = this.getWritableDatabase();

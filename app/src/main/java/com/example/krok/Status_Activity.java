@@ -72,48 +72,76 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
             }
 
         });
-        krokipage.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        v.getBackground().setColorFilter(R.drawable.step_gradientdark, PorterDuff.Mode.SRC_ATOP);
-                        v.invalidate();
-                        break;
-                    }
-                    case MotionEvent.ACTION_UP: {
-                        v.getBackground().clearColorFilter();
-                        v.invalidate();
-                        break;
-                    }
+        krokipage.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    v.getBackground().setColorFilter(R.drawable.step_gradientdark, PorterDuff.Mode.SRC_ATOP);
+                    v.invalidate();
+                    break;
                 }
-                return false;
+                case MotionEvent.ACTION_UP: {
+                    v.getBackground().clearColorFilter();
+                    v.invalidate();
+                    break;
+                }
             }
+            return false;
+        });
+        hhistory_card.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    v.getBackground().setColorFilter(R.drawable.step_gradientdark, PorterDuff.Mode.SRC_ATOP);
+                    v.invalidate();
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    v.getBackground().clearColorFilter();
+                    v.invalidate();
+                    break;
+                }
+            }
+            return false;
+        });
+        map_card.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    v.getBackground().setColorFilter(R.drawable.step_gradientdark, PorterDuff.Mode.SRC_ATOP);
+                    v.invalidate();
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    v.getBackground().clearColorFilter();
+                    v.invalidate();
+                    break;
+                }
+            }
+            return false;
         });
 
 
         hhistory_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+/*
                 HHistory fragment = new HHistory();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, fragment); // fragment container id in first parameter is the  container(Main layout id) of Activity
                 transaction.addToBackStack("just_back");  // this will manage backstack
                 transaction.commit();
-
+*/
             }
         });
+
         map_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+/*
                 MapActual fragment = new MapActual();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, fragment); // fragment container id in first parameter is the  container(Main layout id) of Activity
                 transaction.addToBackStack("just_back");  // this will manage backstack
                 transaction.commit();
-
+*/
             }
         });
         super.onViewCreated(view, savedInstanceState);
@@ -349,9 +377,10 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
         textView7.setText("Zrobiłeś dzisiaj już " + String.format("%.0f", step_C - Float.valueOf(todaysteps)) + " kroków. Twój cel to: " + max_s);
         TextView textView9 = getView().findViewById(R.id.map_text);
         TextView textView10 = getView().findViewById(R.id.height_text);
-        textView9.setText("Aktualne ciśnienie: " + String.format("%.2f", presure) + "hPa");
         height = Math.round(SensorManager.getAltitude(presure_0, presure));
-        textView10.setText("Wysokość: " + String.format("%.0f", height) + "m");
+        textView10.setText("Aktualne ciśnienie: " + String.format("%.2f", presure) + "hPa.      " + "Estymowana wysokość: " + String.format("%.0f", height) + "m");
+
+     //   textView10.setText("Estymowana wysokość: " + String.format("%.0f", height) + "m");
         if (!String.format("%.0f", height).equals("44330") || height == Math.min(height, 0f))
             db2helper.AddPomiar(getContext(), String.format("%.0f", height));
     }

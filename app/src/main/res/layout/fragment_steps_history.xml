@@ -3,8 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StepsHistory">
+    tools:context=".StepsHistory"
+    android:background="@color/cardview_light_background">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
     <Button
         android:id="@+id/step_history_back_button"
         android:layout_width="60dp"
@@ -12,4 +19,11 @@
         android:text=""
         android:background="@drawable/back_button"/>
 
+    <com.github.mikephil.charting.charts.BarChart
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/barchart"
+       />
+    </LinearLayout>
 </FrameLayout>

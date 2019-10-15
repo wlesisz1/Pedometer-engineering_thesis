@@ -110,7 +110,7 @@ public class SaveStepsDate extends BroadcastReceiver {
                     JSONObject jso = new JSONObject(d);
                     JSONObject sys = jso.getJSONObject("sys");
                     sys.put("date", date);
-                    sys.put("todaysteps", todaysteps.toString());
+                    sys.put("todaysteps", todaysteps);
                     jso.put("sys", sys);
                     OutputStream os = new FileOutputStream(context.getFilesDir() + "data.json");
                     os.write(jso.toString().getBytes());
