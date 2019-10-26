@@ -26,7 +26,7 @@ import java.util.Date;
 import static android.content.Context.SENSOR_SERVICE;
 import static android.util.Log.e;
 
-public class SaveStepsDate extends BroadcastReceiver {
+public class SaveStepsDate extends BroadcastReceiver  {
     private SensorManager mSensorManager;
     private Sensor mStepCounter;
     String date;
@@ -35,7 +35,8 @@ public class SaveStepsDate extends BroadcastReceiver {
     Context context;
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.println(Log.ASSERT,"", "Toast.makeText(context,.show()");
+
+
         db2helper = new SampleSQLiteDBHelper(context);
          this.context=context;
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
@@ -43,14 +44,15 @@ public class SaveStepsDate extends BroadcastReceiver {
 
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MINUTE, 1);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         Date dateWithoutTime = cal.getTime();
         date = dateWithoutTime.toString();
-
+       // Toast.makeText(context, date, Toast.LENGTH_SHORT).show();
         mSensorManager.registerListener(mSensorEventListener, mStepCounter,
                 SensorManager.SENSOR_DELAY_FASTEST);
+
     }
     public void setAlarm(Context context)
     {
@@ -59,12 +61,14 @@ public class SaveStepsDate extends BroadcastReceiver {
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.MINUTE, 1);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        long millis = (System.currentTimeMillis() - c.getTimeInMillis());
 
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*60*60*24-millis,pi);
+        long millis = (System.currentTimeMillis() - c.getTimeInMillis());
+        Log.println(Log.ASSERT, String.valueOf(millis),  String.valueOf(1000*60*60*24-millis));
+        Toast.makeText(context, String.valueOf(1000*60*60*24-millis), Toast.LENGTH_SHORT).show();
+        am.set(AlarmManager.RTC_WAKEUP,  1000*60*60*24-millis,pi);
       //  am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000, pi); //
     }
 

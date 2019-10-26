@@ -135,13 +135,13 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
         map_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
+
                 MapActual fragment = new MapActual();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, fragment); // fragment container id in first parameter is the  container(Main layout id) of Activity
                 transaction.addToBackStack("just_back");  // this will manage backstack
                 transaction.commit();
-*/
+
             }
         });
         super.onViewCreated(view, savedInstanceState);

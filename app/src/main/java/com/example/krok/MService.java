@@ -23,7 +23,7 @@ public class MService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.println(Log.ASSERT,"service",getApplicationContext().toString()) ;
-        saveStepsDate.onReceive(getApplicationContext(), intent);
+
         saveStepsDate.setAlarm(this);
 
         return START_STICKY;

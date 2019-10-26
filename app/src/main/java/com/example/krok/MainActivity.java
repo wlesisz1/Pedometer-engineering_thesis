@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.Mapbox;
+
 public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener, StepsHistory.OnFragmentInteractionListener, MapActual.OnFragmentInteractionListener,HHistory.OnFragmentInteractionListener, Settings_Activity.OnFragmentInteractionListener,Status_Activity.OnFragmentInteractionListener{
  private long backPressedTime;
     @Override
