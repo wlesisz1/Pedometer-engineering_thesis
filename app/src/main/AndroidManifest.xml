@@ -20,7 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.NoActionBar">
-        <activity android:name=".TripActivity"></activity>
         <activity android:name=".Status_Activity" />
         <activity
             android:name=".MainActivity"
@@ -37,11 +36,19 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <activity android:name=".TripActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <service
             android:name=".MService"
             android:enabled="true"
             android:process=":MService" >
         </service>
+        <service android:name=".TripService" />
     </application>
 
 </manifest>

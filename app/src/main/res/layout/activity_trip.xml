@@ -14,11 +14,15 @@
 
         >
 
-        <ExpandableListView
+        <Spinner
             android:id="@+id/listoftrips"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/recordbutton"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"
+            android:layout_marginTop="5dp"
             />
 
         <Button
@@ -27,6 +31,7 @@
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
+
             android:layout_alignParentRight="true"
             />
 

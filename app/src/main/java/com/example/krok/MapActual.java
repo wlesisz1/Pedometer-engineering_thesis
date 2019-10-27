@@ -43,9 +43,9 @@ public class MapActual extends Fragment implements
     private static final long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
     private static final long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
     private MapboxMap mapboxMap;
-    private OnFragmentInteractionListener mListener;
-    private MapView mapView;
 
+    private MapView mapView;
+    private OnFragmentInteractionListener mListener;
     private PermissionsManager permissionsManager;
     private LocationEngine locationEngine;
     private LocationChangeListeningActivityLocationCallback callback =
