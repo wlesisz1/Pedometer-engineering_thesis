@@ -1,104 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Page1">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+
+
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:context=".Page1">
+        android:stretchColumns="1">
 
-        <ImageView
-            android:id="@+id/imageView"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_weight="3"
-            android:layout_height="0dp"
-            android:src="@android:color/darker_gray" />
+            android:layout_height="80dp"
 
-        <ImageView
-            android:id="@+id/imageView2"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:id="@+id/card_nazwa"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/step_gradient"
+
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/text_nazwa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nazwa"
+                    android:textColor="#FFFF"
+                    android:textSize="25dp">
+
+
+                </TextView>
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_weight="3"
-            android:layout_height="0dp"
-            android:src="#5590" />
 
-        <ImageView
-            android:id="@+id/imageView3"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+
+            >
+
+            <LinearLayout
+                android:id="@+id/card_kroki"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/step_gradient">
+
+
+                <TextView
+                    android:id="@+id/text_kroki"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kroki"
+                    android:textColor="#FFFF"
+                    android:textSize="25dp">
+
+                </TextView>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_weight="3"
-            android:layout_height="0dp"
-            android:src="#FFFFD477" />
 
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:src="@color/design_default_color_primary" />
-    </LinearLayout>
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:text="TextView"
+            >
 
-            android:textAlignment="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:typeface="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:typeface="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:typeface="normal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+            <LinearLayout
+                android:id="@+id/card_wys"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/step_gradient">
 
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:src="@color/design_default_color_primary" />
+                <TextView
+                    android:id="@+id/text_wys"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Wysokość"
+                    android:textColor="#FFFF"
+                    android:textSize="25dp">
 
-
-    </LinearLayout>
-
-
-</android.support.constraint.ConstraintLayout>
+                </TextView>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </TableLayout>

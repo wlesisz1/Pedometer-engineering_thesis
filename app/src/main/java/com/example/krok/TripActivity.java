@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -21,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -172,7 +175,7 @@ if(isServiceRunning("com.example.krok.TripService"))
         Intent serviceIntent = new Intent(getActivity(), TripService.class);
         getActivity().stopService(serviceIntent);
     }
-    public void SpinnerDataChange(){
+    public void SpinnerDataChange() {
         Cursor cursor = db2helper.GetTripNames(getActivity());
         cursor.moveToFirst();
 
@@ -187,13 +190,34 @@ if(isServiceRunning("com.example.krok.TripService"))
             Items.add(cursor.getString(0));
             cursor.moveToNext();
         }
-        Object[] temp= Items.toArray();
-        String[] items = Arrays.copyOf(temp, temp.length,String[].class);
+        Object[] temp = Items.toArray();
+        String[] items = Arrays.copyOf(temp, temp.length, String[].class);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         TripsListView.setAdapter(adapter);
         cursor.close();
+        TripsListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString( "selected_tripID", items[position] );
+
+                editor.commit();
+           SwipeAdapter swipeAdapter = new SwipeAdapter(getFragmentManager());
+                ViewPager t =  getView().findViewById(R.id.view_pager);
+               t.setAdapter(swipeAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
     @Override
     public void onFragmentInteraction(Uri uri) {

@@ -1,11 +1,14 @@
 package com.example.krok;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +19,16 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.mapbox.geojson.Point;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Page2 extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Button button3;
-    Button button;
+
     SampleSQLiteDBHelper db2helper;
     private String mParam1;
     private String mParam2;
@@ -107,26 +111,41 @@ public class Page2 extends Fragment {
         db2helper = new SampleSQLiteDBHelper(getActivity());
         mChart = getView().findViewById(R.id.linechart);
         ArrayList<Entry> yValues = new ArrayList<>();
-        Cursor cursor = db2helper.GetPomiar(getActivity());
-        int bigg = 0;
-        while (cursor.moveToNext()) {
-            yValues.add(new Entry(cursor.getInt(0), cursor.getInt(2)));
-            if (bigg < cursor.getInt(2))
-                bigg = cursor.getInt(2);
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        String dbid = sharedPref.getString("selected_tripID", "empty");
+
+        try {
+            Cursor cursor = db2helper.GetTrip(getContext(), dbid);
+
+            cursor.moveToFirst();
+            int bigg = 0;
+            while (cursor.moveToNext()) {
+                if (cursor.getInt(2) > 0) {
+                    yValues.add(new Entry(cursor.getInt(3), cursor.getInt(2)));
+
+                Log.println(Log.ASSERT, "yValues", String.valueOf(cursor.getInt(2)));
+                if (bigg < cursor.getInt(2))
+                    bigg = cursor.getInt(2);
+            }
+            }
+            LineDataSet set1 = new LineDataSet(yValues, "Wysokość");
+            set1.setColor(Color.RED);
+            set1.setCircleColors(Color.RED);
+            set1.setDrawCircles(false);
+            set1.setDrawValues(false);
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1);
+            LineData data = new LineData(dataSets);
+            mChart.getAxisLeft().setAxisMinimum(0f);
+            mChart.getAxisLeft().setAxisMaximum(2 * bigg);
+            mChart.getAxisRight().setAxisMinimum(0f);
+            mChart.getAxisRight().setAxisMaximum(2 * bigg);
+            mChart.setData(data);
+            cursor.close();
+        } catch (SQLException e) {
+
         }
-        LineDataSet set1 = new LineDataSet(yValues, "Wysokość");
-        set1.setColor(Color.RED);
-        set1.setCircleColors(Color.RED);
-        set1.setDrawCircles(false);
-        set1.setDrawValues(false);
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-        LineData data = new LineData(dataSets);
-        mChart.getAxisLeft().setAxisMinimum(0f);
-        mChart.getAxisLeft().setAxisMaximum(2 * bigg);
-        mChart.getAxisRight().setAxisMinimum(0f);
-        mChart.getAxisRight().setAxisMaximum(2 * bigg);
-        mChart.setData(data);
 
     }
 

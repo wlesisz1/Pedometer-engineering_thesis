@@ -33,13 +33,21 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 import static android.os.Looper.getMainLooper;
+import static com.example.krok.Status_Activity.OPEN_WEATHER_MAP_API;
 import static com.example.krok.tripNotification.CHANNEL_ID;
 
 public class TripService extends Service implements OnMapReadyCallback {
@@ -57,6 +65,7 @@ public class TripService extends Service implements OnMapReadyCallback {
     public static String Y;
     public  static int step_C;
     public static float pressure;
+    float presure_0;
     public static float pressureatzero;
     public  static int height;
     String ID;
@@ -101,13 +110,54 @@ public class TripService extends Service implements OnMapReadyCallback {
 
         public void onSensorChanged(SensorEvent event) {
             pressure = event.values[0];
-            height = Integer.valueOf(String.valueOf(SensorManager.getAltitude(
-                    mSensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure)));
+            Float test = SensorManager.getAltitude(
+                    presure_0, pressure);
+
+            height = Math.round(test);
 
         }
     };
+
+    public JSONObject getJSON(Context context2) {
+
+        try {
+            URL url = new URL(OPEN_WEATHER_MAP_API);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            BufferedReader ir = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String text = ir.lines().collect(Collectors.joining("\n"));
+            JSONObject json = new JSONObject(text);
+            return json;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public void SetPressure(JSONObject json) {
+        try {
+            JSONObject main = json.getJSONObject("main");
+            presure_0 = Float.parseFloat(main.getString("pressure"));
+        } catch (Exception e) {
+            Log.e("Weather", "Field not found");
+        }
+    }
+
+    public void updateData() {
+        JSONObject json = getJSON(getApplicationContext());
+        if (json == null) {
+            Toast.makeText(getApplicationContext(), "Nie ma takiego miasta", Toast.LENGTH_LONG).show();
+        } else {
+            SetPressure(json);
+        }
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        mSensorManager.registerListener(mSensorEventListener, mStepCounter,
+                SensorManager.SENSOR_DELAY_FASTEST);
+
+        mSensorManager.registerListener(mSensorEventListener2, mPressureSensor,
+                SensorManager.SENSOR_DELAY_FASTEST);
         db2helper = new SampleSQLiteDBHelper(getApplication());
         String input = intent.getStringExtra("inputExtra");
         ID=input;
@@ -129,8 +179,8 @@ public class TripService extends Service implements OnMapReadyCallback {
         startForeground(1, notification);
         initLocationEngine();
         timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 600000);
-        timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 10000);
-
+        timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 1000);
+        timer.scheduleAtFixedRate(new updatePressureOW(), 0, 900000);
         return START_NOT_STICKY;
     }
 
@@ -255,8 +305,8 @@ public class TripService extends Service implements OnMapReadyCallback {
             *   3. Height Data */
 
 
-
-            db2helper.AddTripMeasurement(getApplication(), x,y,ID,step_C,height);
+Log.println(Log.ASSERT, "Zapisalem takie dane: ", "X = " + x.toString() + "; Y = " + y.toString() + "; step_C = " + String.valueOf(step_C)  + "; height = " +String.valueOf(height));
+        db2helper.AddTripMeasurement(getApplication(), x,y,ID,height,step_C);
         }
 
     }
@@ -265,6 +315,14 @@ public class TripService extends Service implements OnMapReadyCallback {
         @Override
         public void run() {
             pressureatzero = 1024;
+        }
+
+    }
+
+    private class updatePressureOW extends TimerTask {
+        @Override
+        public void run() {
+            updateData();
         }
 
     }

@@ -27,12 +27,12 @@ public class SwipeAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int Position) {
         switch (Position) {
             case 0:
-                return "Krokomierz";
+                return "Informacje";
             case 1:
-                return "Historia";
+                return "Wykres";
 
             case 2:
-                return "Ustawienia";
+                return "Mapa";
             default:
                 return null;
         }

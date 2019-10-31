@@ -49,7 +49,7 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public static final String TRIPID = "_id";
     public static final String TRIPNAME = "_name";
 
-    private static final int DATABASE_VERSION = 111;
+    private static final int DATABASE_VERSION = 121;
 
     public SampleSQLiteDBHelper(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -138,7 +138,9 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
         try {
             database.insertOrThrow(SampleSQLiteDBHelper.TRIPSID_TABLE_NAME, null, values);
             //Create Table for Name
-CreateNewTrip(database, Name);
+
+            CreateNewTrip(database, Name);
+            AddTripMeasurement(context, 0f , 0f, "Empty",0, 0);
 
         } catch (SQLException e) {
             e.printStackTrace();

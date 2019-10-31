@@ -147,7 +147,7 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private static final String OPEN_WEATHER_MAP_API = "https://api.openweathermap.org/data/2.5/weather?id=3083829&appid=ab705d098889a8e1258ef1073193aa5f";
+    protected static final String OPEN_WEATHER_MAP_API = "https://api.openweathermap.org/data/2.5/weather?id=3083829&appid=ab705d098889a8e1258ef1073193aa5f";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Context context;
@@ -381,8 +381,7 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
         textView10.setText("Aktualne ciśnienie: " + String.format("%.2f", presure) + "hPa.      " + "Estymowana wysokość: " + String.format("%.0f", height) + "m");
 
      //   textView10.setText("Estymowana wysokość: " + String.format("%.0f", height) + "m");
-        if (!String.format("%.0f", height).equals("44330") || height == Math.min(height, 0f))
-            db2helper.AddPomiar(getContext(), String.format("%.0f", height));
+
     }
     @Override
     public void onPause() {

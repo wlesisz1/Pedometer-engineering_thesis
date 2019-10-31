@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -33,6 +34,9 @@ public class SaveStepsDate extends BroadcastReceiver  {
     String todaysteps;
     SampleSQLiteDBHelper db2helper;
     Context context;
+    static String  stepst;
+
+    static String LastDateDB;
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -41,17 +45,62 @@ public class SaveStepsDate extends BroadcastReceiver  {
          this.context=context;
         mSensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         mStepCounter = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Cursor cursor = db2helper.GetPomiarSteps(context);
+        cursor.moveToLast();
+        String DateFromDB = cursor.getString(0);
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 1);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        Date dateWithoutTime = cal.getTime();
-        date = dateWithoutTime.toString();
+
+
+        LastDateDB = DateFromDB;
        // Toast.makeText(context, date, Toast.LENGTH_SHORT).show();
         mSensorManager.registerListener(mSensorEventListener, mStepCounter,
                 SensorManager.SENSOR_DELAY_FASTEST);
+
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        Date dateWithoutTime = cal.getTime();
+        if (LastDateDB == null || !LastDateDB.equals(dateWithoutTime.toString())) {
+
+            dateWithoutTime = cal.getTime();
+            date = dateWithoutTime.toString();
+            while(stepst==null)
+            {
+                try {
+                    wait(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            todaysteps = stepst;
+            try {
+                InputStream is = new FileInputStream(context.getFilesDir() + "data.json");
+                int length = is.available();
+                byte[] data = new byte[length];
+                is.read(data);
+                is.close();
+                String d = new String(data);
+                JSONObject jso = new JSONObject(d);
+                JSONObject sys = jso.getJSONObject("sys");
+                sys.put("date", date);
+                sys.put("todaysteps", todaysteps);
+                jso.put("sys", sys);
+                OutputStream os = new FileOutputStream(context.getFilesDir() + "data.json");
+                os.write(jso.toString().getBytes());
+
+                db2helper.AddStartSTEP(context, todaysteps);
+
+            } catch (Exception e1) {
+
+                Log.getStackTraceString(e1);
+
+            }
+        }
+
+
 
     }
     public void setAlarm(Context context)
@@ -94,40 +143,7 @@ public class SaveStepsDate extends BroadcastReceiver  {
                 mStepOffset = event.values[0];
             }
             int step_C = (int)event.values[0];
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            Date dateWithoutTime = cal.getTime();
-            if (date == null || !date.equals(dateWithoutTime.toString())) {
-
-                date = dateWithoutTime.toString();
-                todaysteps = Integer.toString(step_C);
-                try {
-                    InputStream is = new FileInputStream(context.getFilesDir() + "data.json");
-                    int length = is.available();
-                    byte[] data = new byte[length];
-                    is.read(data);
-                    is.close();
-                    String d = new String(data);
-                    JSONObject jso = new JSONObject(d);
-                    JSONObject sys = jso.getJSONObject("sys");
-                    sys.put("date", date);
-                    sys.put("todaysteps", todaysteps);
-                    jso.put("sys", sys);
-                    OutputStream os = new FileOutputStream(context.getFilesDir() + "data.json");
-                    os.write(jso.toString().getBytes());
-                    db2helper.AddStartSTEP(context, todaysteps);
-
-                } catch (Exception e1) {
-
-                    Log.getStackTraceString(e1);
-
-                }
-            }
-
-
+            stepst = String.valueOf(step_C);
 
             mSensorManager.unregisterListener(this);
         }
