@@ -1,9 +1,11 @@
 package com.example.krok;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -103,31 +105,71 @@ if(isServiceRunning("com.example.krok.TripService"))
             @Override
             public void onClick(View v) {
                 if (RecordStart == false) {
-                    RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_on));
-                    RecordStart = true;
-                    Cursor cursor = db2helper.GetTripNames(getActivity());
-                    cursor.moveToFirst();
-                    String ID;
 
+                    final View view = getLayoutInflater().inflate(R.layout.askfornamealert, null);
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("Wpisz nazwe wycieczki:");
+
+                    alertDialog.setCancelable(false);
+
+
+
+                    final EditText etComments = (EditText) view.findViewById(R.id.etComments);
+                    etComments.setText("Trip");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_on));
+                            RecordStart = true;
+                            Cursor cursor = db2helper.GetTripNames(getActivity());
+                            cursor.moveToFirst();
+                            String ID;
+                            boolean isUsed = false;
+                            while (cursor.moveToNext()) {
+                                if (cursor.getString(0) == etComments.getText().toString()) {
+                                    isUsed = true;
+                                }
+                            }
 //                    Log.println(Log.ASSERT, "ass", cursor.getString(1));
+                            if (isUsed)
+                                Toast.makeText(getContext(), "Ta nazwa jest zajeta!", Toast.LENGTH_SHORT).show();
+                            else {
+                                //   Toast.makeText(getContext(), String.valueOf(cursor.isAfterLast()), Toast.LENGTH_SHORT).show();
+                                if (cursor.getCount() == 0) {
+                                    ID = etComments.getText().toString();
+                                    Toast.makeText(getContext(), "NoDB", Toast.LENGTH_SHORT).show();
+                                    db2helper.AddTripIDAndCreateTable(getActivity(), ID);
 
-                 //   Toast.makeText(getContext(), String.valueOf(cursor.isAfterLast()), Toast.LENGTH_SHORT).show();
-                    if (cursor.getCount()==0)
-                    {
-                       Toast.makeText(getContext(), "NoDB", Toast.LENGTH_SHORT).show();
-                        db2helper.AddTripIDAndCreateTable(getActivity(), "1" );
-                        ID="1";
-                    }
-                    else
-                    {
-                        cursor.moveToLast();
-                        ID = cursor.getString(0);
-                        ID = String.valueOf(Integer.valueOf(ID)+1);
-                        db2helper.AddTripIDAndCreateTable(getActivity(), ID );
-                    }
-                    startService(getView(),ID );
-                    SpinnerDataChange();
-                    cursor.close();
+                                } else {
+
+                                    cursor.moveToLast();
+                                    ID = etComments.getText().toString();
+                                    db2helper.AddTripIDAndCreateTable(getActivity(), ID);
+                                }
+                                startService(getView(), ID);
+                                SpinnerDataChange();
+
+                            }
+                            cursor.close();}
+                    });
+
+
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            alertDialog.dismiss();
+                        }
+                    });
+
+
+                    alertDialog.setView(view);
+                    alertDialog.show();
+
+
+
+
+
 
                 } else {
                     RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_off));

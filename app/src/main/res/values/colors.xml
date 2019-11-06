@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#5B76FF</color>
     <color name="colorAccent">#FFB4CF</color>
     <color name="menuColor">#7507ff</color>
+    <color name="blackC">#000000</color>
 </resources>

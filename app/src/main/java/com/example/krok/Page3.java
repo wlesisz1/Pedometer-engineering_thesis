@@ -28,7 +28,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -78,15 +80,21 @@ import java.util.List;
 
 import static android.os.Looper.getMainLooper;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.layers.Property.LINE_CAP_ROUND;
+import static com.mapbox.mapboxsdk.style.layers.Property.LINE_JOIN_ROUND;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionHeight;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillExtrusionOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineCap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 public class Page3 extends Fragment
          {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private List<Point> routeCoordinates;
+    private static List<Point> routeCoordinates;
     SampleSQLiteDBHelper db2helper;
 
 
@@ -163,20 +171,26 @@ private Float CameraLat, CameraLong;
                         mapboxMap.setCameraPosition(position);
 // Create the LineString from the list of coordinates and then make a GeoJSON
 // FeatureCollection so we can add the line to our map as a layer.
+
+
+
                         style.addSource(new GeoJsonSource("line-source",
                                 FeatureCollection.fromFeatures(new Feature[] {Feature.fromGeometry(
                                         LineString.fromLngLats(routeCoordinates)
                                 )})));
 
+
+
+
 // The layer properties for our line. This is where we make the line dotted, set the
 // color, etc.
                         style.addLayer(new LineLayer("linelayer", "line-source").withProperties(
                           //      PropertyFactory.lineDasharray(new Float[] {0.01f, 2f}),
-                                PropertyFactory.lineCap(Property.LINE_CAP_SQUARE),
-                                PropertyFactory.lineJoin(Property.LINE_JOIN_MITER),
-                                PropertyFactory.lineWidth(5f),
-                                PropertyFactory.lineOpacity(.7f),
-                                PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
+                                lineCap(Property.LINE_CAP_SQUARE),
+                                lineJoin(Property.LINE_JOIN_MITER),
+                                lineWidth(5f),
+
+                                lineColor(Color.parseColor("#e55e5e"))
                         ));
                     }
                 });
@@ -196,7 +210,23 @@ private Float CameraLat, CameraLong;
                             mapboxMap.setStyle(Style.OUTDOORS, new Style.OnStyleLoaded() {
                                 @Override
                                 public void onStyleLoaded(@NonNull Style style) {
-
+                                    initRouteCoordinates();
+                                    CameraPosition position = new CameraPosition.Builder()
+                                            .target(new LatLng(CameraLat, CameraLong))
+                                            .zoom(14)
+                                            .tilt(50)
+                                            .build();
+                                    mapboxMap.setCameraPosition(position);
+// Create the LineString from the list of coordinates and then make a GeoJSON
+// FeatureCollection so we can add the line to our map as a layer.
+                                    String GJson = GetStringGJSON();
+                                    GeoJsonSource courseRouteGeoJson = new GeoJsonSource(
+                                            "coursedata", GJson);
+                                    style.addSource(courseRouteGeoJson);
+                                    style.addLayer(new FillExtrusionLayer("course", "coursedata").withProperties(
+                                            fillExtrusionColor(Color.YELLOW),
+                                            fillExtrusionOpacity(0.7f),
+                                            fillExtrusionHeight(get("e"))));
                                 }
 
 
@@ -224,20 +254,26 @@ private Float CameraLat, CameraLong;
                                     mapboxMap.setCameraPosition(position);
 // Create the LineString from the list of coordinates and then make a GeoJSON
 // FeatureCollection so we can add the line to our map as a layer.
+
+
+
                                     style.addSource(new GeoJsonSource("line-source",
                                             FeatureCollection.fromFeatures(new Feature[] {Feature.fromGeometry(
                                                     LineString.fromLngLats(routeCoordinates)
                                             )})));
 
+
+
+
 // The layer properties for our line. This is where we make the line dotted, set the
 // color, etc.
                                     style.addLayer(new LineLayer("linelayer", "line-source").withProperties(
                                             //      PropertyFactory.lineDasharray(new Float[] {0.01f, 2f}),
-                                            PropertyFactory.lineCap(Property.LINE_CAP_SQUARE),
-                                            PropertyFactory.lineJoin(Property.LINE_JOIN_MITER),
-                                            PropertyFactory.lineWidth(5f),
-                                            PropertyFactory.lineOpacity(.7f),
-                                            PropertyFactory.lineColor(Color.parseColor("#e55e5e"))
+                                            lineCap(Property.LINE_CAP_SQUARE),
+                                            lineJoin(Property.LINE_JOIN_MITER),
+                                            lineWidth(5f),
+
+                                            lineColor(Color.parseColor("#e55e5e"))
                                     ));
                                 }
                             });
@@ -247,63 +283,7 @@ private Float CameraLat, CameraLong;
             }
         });
     }
-/*
-             private void initRouteHCoordinates() throws JSONException {
-// Create a list to store our line coordinates.
-                 routeCoordinates = new ArrayList<>();
-                 Geom geometry = new GsonBuilder()
-                         .registerTypeAdapterFactory(new GeometryA())
-                         .create()
-                         .fromJson("{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[-118.327666667,33.341716667],[-118.327666667,33.341916667],[-118.32786666700001,33.341916667],[-118.32786666700001,33.341716667],[-118.327666667,33.341716667]]]}");
 
-
-                 JSONObject featureCollection = new JSONObject();
-                 featureCollection.put("type", "FeatureCollection");
-                 JSONObject crs = new JSONObject();
-
-
-                     crs.put("type", "name");
-
-                 crs.put("properties", properties);
-                 featureCollection.put("crs", crs);
-
-                 JSONArray features = new JSONArray();
-                 JSONObject feature = new JSONObject();
-                 feature.put("type", "Feature");
-                 JSONObject geometry = new JSONObject();
-
-                 JSONAray JSONArrayCoord = new JSONArray();
-
-                 JSONArrayCoord.add(0, 55);
-                 JSONArrayCoord.add(1, 55);
-                 geometry.put("type", "Point");
-                 geometry.put("coordinates", JSONArrayCoord);
-                 feature.put("geometry", geometry);
-
-                 features.add(feature);
-                 featureCollection.put("features", features);
-
-
-                 SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-                 String dbid = sharedPref.getString("selected_tripID", "empty");
-
-
-                 Cursor cursor =  db2helper.GetTrip(getContext(), dbid);
-
-                 cursor.moveToFirst();
-
-                 CameraLat = cursor.getFloat(0);
-                 CameraLong = cursor.getFloat(1);
-                 while ( cursor.moveToNext()){
-                     Log.println(Log.ASSERT, "tt", String.valueOf(cursor.getFloat(0)));
-
-                     routeCoordinates.add(Point.fromLngLat(cursor.getFloat(0), cursor.getFloat(1)));
-
-                 }
-                 Log.println(Log.ASSERT, "tt", String.valueOf(cursor.isAfterLast()));
-             }
-*/
     private void initRouteCoordinates() {
 // Create a list to store our line coordinates.
         routeCoordinates = new ArrayList<>();
@@ -319,11 +299,41 @@ private Float CameraLat, CameraLong;
        CameraLat = cursor.getFloat(0);
        CameraLong = cursor.getFloat(1);
        while ( cursor.moveToNext()){
-           Log.println(Log.ASSERT, "tt", String.valueOf(cursor.getFloat(0)));
-           routeCoordinates.add(Point.fromLngLat(cursor.getFloat(0), cursor.getFloat(1)));
+       //    Log.println(Log.ASSERT, "tt", String.valueOf(cursor.getFloat(0)));
+           routeCoordinates.add(Point.fromLngLat(cursor.getFloat(1), cursor.getFloat(0)));
 
        }
-        Log.println(Log.ASSERT, "tt", String.valueOf(cursor.isAfterLast()));
+
+
+        Log.println(Log.ASSERT, "size", String.valueOf(       routeCoordinates.size()));
+    }
+
+
+    public String GetStringGJSON() {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        String dbid = sharedPref.getString("selected_tripID", "empty");
+        String GJson = "";
+        GJson += "{\"type\":\"FeatureCollection\",\"features\":[";
+
+        if (dbid != "empty") {
+            Cursor cursor = db2helper.GetTrip(getContext(), dbid);
+
+            cursor.moveToFirst();
+            while (cursor.moveToNext()) {
+                Float lat, lon, height;
+                lat = cursor.getFloat(1);
+                lon = cursor.getFloat(0);
+                height = cursor.getFloat(2);
+                GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + lon + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + height + "}}";
+                 if (!cursor.isLast()) {
+                    GJson += ",";
+                }
+
+            }
+            GJson += "]}";
+        }
+        return GJson;
     }
 
     @Override
