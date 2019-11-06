@@ -179,7 +179,7 @@ public class TripService extends Service implements OnMapReadyCallback {
         startForeground(1, notification);
         initLocationEngine();
         timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 600000);
-        timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 1000);
+        timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 10000);
         timer.scheduleAtFixedRate(new updatePressureOW(), 0, 900000);
         return START_NOT_STICKY;
     }

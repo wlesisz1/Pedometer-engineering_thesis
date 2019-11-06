@@ -324,12 +324,16 @@ private Float CameraLat, CameraLong;
                 Float lat, lon, height;
                 lat = cursor.getFloat(1);
                 lon = cursor.getFloat(0);
-                height = cursor.getFloat(2);
-                GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + lon + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + height + "}}";
-                 if (!cursor.isLast()) {
-                    GJson += ",";
+                if(cursor.moveToNext()) {
+                    float lat2 = cursor.getFloat(1);;
+                    float lon2 = cursor.getFloat(0);;
+                    height = cursor.getFloat(2);
+                    GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0001) + "],[" + lat2 + "," + (lon2+0.0001) + "],[" + lat2 + "," + lon2 + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + (height*2) + "}}";
+                    if (!cursor.isLast()) {
+                        GJson += ",";
+                    }
+                    cursor.moveToPrevious();
                 }
-
             }
             GJson += "]}";
         }

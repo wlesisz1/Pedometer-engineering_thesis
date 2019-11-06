@@ -28,10 +28,10 @@ public class MService extends Service {
 
         return START_STICKY;
     }
-
+/*
     @Override
     public void onStart(Intent intent, int startId) {
         saveStepsDate.setAlarm(this);
     }
-
+*/
 }
