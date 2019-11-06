@@ -105,19 +105,23 @@ public class SaveStepsDate extends BroadcastReceiver  {
     }
     public void setAlarm(Context context)
     {
-        AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(context, SaveStepsDate.class);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 1);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
 
-        long millis = (System.currentTimeMillis() - c.getTimeInMillis());
-        Log.println(Log.ASSERT, String.valueOf(millis),  String.valueOf(1000*60*60*24-millis));
-        Toast.makeText(context, String.valueOf(1000*60*60*24-millis), Toast.LENGTH_SHORT).show();
-        am.set(AlarmManager.RTC_WAKEUP,  1000*60*60*24-millis,pi);
+
+
+
+
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, 1); // For 1 PM or 2 PM
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        PendingIntent pi = PendingIntent.getService(context, 0,
+                new Intent(context, SaveStepsDate.class),PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pi);
       //  am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000, pi); //
     }
 
