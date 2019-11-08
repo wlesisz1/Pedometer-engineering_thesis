@@ -328,7 +328,9 @@ private Float CameraLat, CameraLong;
                     float lat2 = cursor.getFloat(1);;
                     float lon2 = cursor.getFloat(0);;
                     height = cursor.getFloat(2);
-                    GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0001) + "],[" + lat2 + "," + (lon2+0.0001) + "],[" + lat2 + "," + lon2 + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + (height*2) + "}}";
+                    GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + lon + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + (height*2) + "}}";
+
+                    // GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0001) + "],[" + lat2 + "," + (lon2+0.0001) + "],[" + lat2 + "," + lon2 + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + (height*2) + "}}";
                     if (!cursor.isLast()) {
                         GJson += ",";
                     }

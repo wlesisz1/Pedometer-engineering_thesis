@@ -1,20 +1,31 @@
 package com.example.krok;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.LogPrinter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +36,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Settings_Activity extends Fragment {
 
@@ -92,6 +105,90 @@ public class Settings_Activity extends Fragment {
         View view = inflater.inflate(R.layout.activity_settings, container, false);
         final EditText edittext2 = view.findViewById(R.id.editText2);
         Button button5 = view.findViewById(R.id.button2);
+        Button button_resetTrip = view.findViewById(R.id.button_delete_trip);
+        button_resetTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final View view = getLayoutInflater().inflate(R.layout.trip_delete_spinner, null);
+                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                alertDialog.setTitle("Wpisz nazwe wycieczki:");
+
+                alertDialog.setCancelable(false);
+                final Spinner delete_spinner = (Spinner) view.findViewById(R.id.spinner_delete);
+                Cursor cursor = db2helper.GetTripNames(getActivity());
+                cursor.moveToFirst();
+
+
+
+                ArrayList<String> Items = new ArrayList<>();
+                Log.println(Log.ASSERT, "ass", String.valueOf(cursor.getCount()));
+                while (!cursor.isAfterLast()) {
+
+                    Log.println(Log.ASSERT, "ass", cursor.getString(0));
+                    Items.add(cursor.getString(0));
+                    cursor.moveToNext();
+                }
+                Object[] temp = Items.toArray();
+                String[] items = Arrays.copyOf(temp, temp.length, String[].class);
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                delete_spinner.setAdapter(adapter);
+                cursor.close();
+                delete_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString( "selected_trip_to_delete", items[position] );
+                        editor.commit();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Usuń", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+                        String db_delete = sharedPref.getString("selected_trip_to_delete", "empty");
+                        if(db_delete!="empty") {
+                            db2helper.ClearTrip(db_delete);
+                        }
+
+                    }
+                });
+
+
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+                alertDialog.setView(view);
+                alertDialog.show();
+            }
+        });
+
+        Button button_resetTrips = view.findViewById(R.id.button_delete_trips);
+        button_resetTrips.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClearAllTrips();
+            }
+        });
+
         button5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -175,6 +272,12 @@ public class Settings_Activity extends Fragment {
 
     public void save() {
         try {
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString( "cel_krok", cel );
+
+            editor.commit();
+
             InputStream is = new FileInputStream(getActivity().getFilesDir() + "data.json");
             int length = is.available();
             byte[] data = new byte[length];
@@ -196,6 +299,22 @@ public class Settings_Activity extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+
+
+    public void ClearAllTrips() {
+        Cursor cursor = db2helper.GetTripNames(getActivity());
+        cursor.moveToFirst();
+
+
+        //     Log.println(Log.ASSERT, "ass", String.valueOf(cursor.getCount()));
+        while (!cursor.isAfterLast()) {
+
+            //Log.println(Log.ASSERT, "ass", cursor.getString(0));
+            db2helper.ClearTrip(cursor.getString(0));
+            cursor.moveToNext();
+        }
     }
 
 }

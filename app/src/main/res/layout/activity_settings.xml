@@ -34,18 +34,26 @@
             android:text="10000"
             android:textAlignment="textEnd"
             android:textStyle="bold" />
-
+        <Button
+            android:id="@+id/button_delete_trip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Usuń wybraną wycieczkę" />
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Wyczyść historie" />
-
+        <Button
+            android:id="@+id/button_delete_trips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Usuń wszystkie wycieczki" />
         <TextView
             android:id="@+id/textView14"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wersja oprogoramowania: 0.0001"
+            android:text="Wersja oprogramowania: 1.0"
             android:textAlignment="textEnd" />
 
     </LinearLayout>

@@ -145,7 +145,7 @@ public class Page2 extends Fragment {
             mChart.getAxisLeft().setAxisMaximum(2 * bigg);
             mChart.getAxisRight().setAxisMinimum(0f);
             mChart.getAxisRight().setAxisMaximum(2 * bigg);
-            mChart.zoomToCenter(1,4);
+            mChart.zoomToCenter(1,3);
             mChart.moveViewTo(1,(small+bigg)/2, YAxis.AxisDependency.RIGHT);
             mChart.setData(data);
             cursor.close();

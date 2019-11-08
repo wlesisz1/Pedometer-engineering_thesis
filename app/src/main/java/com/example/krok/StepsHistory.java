@@ -1,6 +1,7 @@
 package com.example.krok;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -17,7 +18,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -123,32 +126,11 @@ public class StepsHistory extends Fragment {
 
         int bigg = 0;
         int times = 0;
-        if(cursor.moveToPrevious()) {
 
-            int LessSteps = cursor.getInt(1);
-
-            cursor.moveToLast();
-            int MoreSteps = cursor.getInt(1);
-
-            if(MoreSteps-LessSteps>0)
-            entries.add(new BarEntry(times, MoreSteps-LessSteps));
-            else
-            {
-                entries.add(new BarEntry(times, 0));
-            }
-            String ValuetoChange = cursor.getString(0);
-
-
-            String VtoLabel = "";
-            VtoLabel += ValuetoChange.substring(8, 10);
-            VtoLabel += "/";
-            VtoLabel += ValuetoChange.substring(4, 7);
-            labels.add(VtoLabel);
-        }
-        while (cursor.moveToPrevious() && times < 7) {
+        do  {
             if (cursor.moveToPrevious()) {
                 int LessSteps = cursor.getInt(1);
-
+                String ValuetoChange = cursor.getString(0);
                 cursor.moveToNext();
                 int MoreSteps = cursor.getInt(1);
                 if(MoreSteps-LessSteps>0)
@@ -158,7 +140,7 @@ public class StepsHistory extends Fragment {
                     entries.add(new BarEntry(times, 0));
                 }
 
-                String ValuetoChange = cursor.getString(0);
+
 
 
                 String VtoLabel = "";
@@ -172,8 +154,7 @@ public class StepsHistory extends Fragment {
                 times++;
             }
 
-
-        }
+        }while (cursor.moveToPrevious() && times < 7);
 
         while (entries.size() < 7) {
             entries.add(new BarEntry(times, 0));
@@ -191,6 +172,9 @@ public class StepsHistory extends Fragment {
         //     BarData dat = new BarData(labels,entries);
         BarDataSet set1 = new BarDataSet(entries, "Kroki");
         set1.setColor(Color.GRAY);
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        String celKrok = sharedPref.getString("cel_krok", "empty");
 
         set1.setDrawValues(true);
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
@@ -201,14 +185,16 @@ public class StepsHistory extends Fragment {
         data.setBarWidth(0.3f);
         data.setValueTextColor(Color.RED);
         mChart.getAxisLeft().setAxisMinimum(0f);
-
+        mChart.getAxisLeft().setAxisMaximum(Integer.valueOf(celKrok)*1.5f);
         mChart.setFitBars(true);
         mChart.setDrawValueAboveBar(true);
         mChart.getAxisRight().setAxisMinimum(0f);
+        mChart.getAxisRight().setAxisMaximum(Integer.valueOf(celKrok)*1.5f);
+
         mChart.animateY(1000);
 
-mChart.setDoubleTapToZoomEnabled(false);
-mChart.setDescription(null);
+        mChart.setDoubleTapToZoomEnabled(false);
+        mChart.setDescription(null);
 
         IndexAxisValueFormatter formatter = new IndexAxisValueFormatter()
         {
@@ -225,7 +211,15 @@ mChart.setDescription(null);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setGranularity(1f);
+        LimitLine limitLine = new LimitLine(Integer.valueOf(celKrok) , "Cel kroków");
+        limitLine.setLineWidth(2f);
+        limitLine.enableDashedLine(10f,15f,2f);
+        limitLine.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        limitLine.setLineColor(Color.BLACK);
 
+        limitLine.setTextSize(10f);
+        YAxis yAxis = mChart.getAxisLeft();
+       yAxis.addLimitLine(limitLine);
         xAxis.setValueFormatter(formatter);
 
         mChart.setData(data);

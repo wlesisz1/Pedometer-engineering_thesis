@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
 
-public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener, StepsHistory.OnFragmentInteractionListener, MapActual.OnFragmentInteractionListener,HHistory.OnFragmentInteractionListener, Settings_Activity.OnFragmentInteractionListener,Status_Activity.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity  implements Page1.OnFragmentInteractionListener, Page2.OnFragmentInteractionListener, Page3.OnFragmentInteractionListener, StepsHistory.OnFragmentInteractionListener, MapActual.OnFragmentInteractionListener, Settings_Activity.OnFragmentInteractionListener,Status_Activity.OnFragmentInteractionListener{
  private long backPressedTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +40,15 @@ public class MainActivity extends AppCompatActivity  implements Page1.OnFragment
             switch (menuItem.getItemId()){
                 case R.id.nav_status:
                     SelectedFragment = new Status_Activity();
-
+                    getSupportFragmentManager().popBackStack();
                     break;
                 case R.id.nav_wyc:
                     SelectedFragment = new TripActivity();
+                    getSupportFragmentManager().popBackStack();
                     break;
                 case R.id.nav_sett:
                     SelectedFragment = new Settings_Activity();
+                    getSupportFragmentManager().popBackStack();
                     break;
                     case R.id.default_activity_button:
                         SelectedFragment = new Status_Activity();

@@ -96,11 +96,10 @@ public class TripActivity extends Fragment implements PermissionsListener, Page1
             permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(getActivity());
         }
-if(isServiceRunning("com.example.krok.TripService"))
-{
-    RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_on));
-    RecordStart = true;
-}
+        if (isServiceRunning("com.example.krok.TripService")) {
+            RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_on));
+            RecordStart = true;
+        }
         RecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +110,6 @@ if(isServiceRunning("com.example.krok.TripService"))
                     alertDialog.setTitle("Wpisz nazwe wycieczki:");
 
                     alertDialog.setCancelable(false);
-
 
 
                     final EditText etComments = (EditText) view.findViewById(R.id.etComments);
@@ -151,7 +149,8 @@ if(isServiceRunning("com.example.krok.TripService"))
                                 SpinnerDataChange();
 
                             }
-                            cursor.close();}
+                            cursor.close();
+                        }
                     });
 
 
@@ -167,10 +166,6 @@ if(isServiceRunning("com.example.krok.TripService"))
                     alertDialog.show();
 
 
-
-
-
-
                 } else {
                     RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_off));
                     RecordStart = false;
@@ -179,7 +174,7 @@ if(isServiceRunning("com.example.krok.TripService"))
             }
         });
 
-      SpinnerDataChange();
+        SpinnerDataChange();
 
     }
 

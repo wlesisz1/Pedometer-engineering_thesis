@@ -262,7 +262,13 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public void ClearTrip(String ID) {
         SQLiteDatabase database = this.getWritableDatabase();
         database.execSQL("drop table if exists " + TRIP_TABLE_NAME + ID);
+        database.execSQL("delete from "+ TRIPSID_TABLE_NAME + " where " + TRIPNAME + "='" + ID + "';");
+
     }
+
+
+
+
 }
 
 
