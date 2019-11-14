@@ -119,11 +119,9 @@ public class StepsHistory extends Fragment {
         BarChart mChart = getView().findViewById(R.id.barchart);
         ArrayList<Entry> yValues = new ArrayList<>();
         Cursor cursor = db2helper.GetPomiarSteps(getActivity());
-
         ArrayList<BarEntry> entries = new ArrayList<>();
         ArrayList<String> labels = new ArrayList<String>();
         cursor.moveToLast();
-
         int bigg = 0;
         int times = 0;
 
@@ -135,14 +133,9 @@ public class StepsHistory extends Fragment {
                 int MoreSteps = cursor.getInt(1);
                 if(MoreSteps-LessSteps>0)
                     entries.add(new BarEntry(times, MoreSteps-LessSteps));
-                else
-                {
+                else {
                     entries.add(new BarEntry(times, 0));
                 }
-
-
-
-
                 String VtoLabel = "";
                 VtoLabel += ValuetoChange.substring(8, 10);
                 VtoLabel += "/";
@@ -190,9 +183,7 @@ public class StepsHistory extends Fragment {
         mChart.setDrawValueAboveBar(true);
         mChart.getAxisRight().setAxisMinimum(0f);
         mChart.getAxisRight().setAxisMaximum(Integer.valueOf(celKrok)*1.5f);
-
         mChart.animateY(1000);
-
         mChart.setDoubleTapToZoomEnabled(false);
         mChart.setDescription(null);
 
@@ -204,7 +195,7 @@ public class StepsHistory extends Fragment {
 
             }
 
-            // we don't draw numbers, so no decimal digits needed
+
 
             public int getDecimalDigits() {  return 0; }
         };
@@ -219,7 +210,7 @@ public class StepsHistory extends Fragment {
 
         limitLine.setTextSize(10f);
         YAxis yAxis = mChart.getAxisLeft();
-       yAxis.addLimitLine(limitLine);
+        yAxis.addLimitLine(limitLine);
         xAxis.setValueFormatter(formatter);
 
         mChart.setData(data);

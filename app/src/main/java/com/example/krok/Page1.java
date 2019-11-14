@@ -77,45 +77,39 @@ public class Page1 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
         String dbid = sharedPref.getString("selected_tripID", "empty");
-        int tempStepMin=0, tempStepMax=0, tempHMin=0,tempHMax=0;
-        int tempMaxH=0;
+        int tempStepMin = 0, tempStepMax = 0, tempHMin = 0, tempHMax = 0;
+        int tempMaxH = 0;
         try {
             Cursor cursor = db2helper.GetTrip(getContext(), dbid);
             cursor.moveToFirst();
             cursor.moveToNext();
             tempStepMin = cursor.getInt(3);
-            Log.println(Log.ASSERT , "tempStempMin", String.valueOf(tempStepMin));
+            Log.println(Log.ASSERT, "tempStempMin", String.valueOf(tempStepMin));
             cursor.moveToLast();
             tempStepMax = cursor.getInt(3);
-            Log.println(Log.ASSERT , "tempStepMax", String.valueOf(tempStepMax));
+            Log.println(Log.ASSERT, "tempStepMax", String.valueOf(tempStepMax));
             cursor.moveToFirst();
-            while(cursor.moveToNext())
-            {
-                if (tempMaxH<cursor.getInt(2))
-                {
-                tempHMax=cursor.getInt(2);
+            while (cursor.moveToNext()) {
+                if (tempMaxH < cursor.getInt(2)) {
+                    tempHMax = cursor.getInt(2);
                 }
             }
             cursor.close();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch(SQLException e)
-            {
 
-            }
-
-        steps = String.valueOf(tempStepMax-tempStepMin);
+        steps = String.valueOf(tempStepMax - tempStepMin);
         maxHeight = String.valueOf(tempHMax);
         TextView textKroki = getView().findViewById(R.id.text_kroki);
         textKroki.setText("Ilość kroków: " + steps);
         TextView textNazwa = getView().findViewById(R.id.text_nazwa);
         textNazwa.setText("Nazwa wycieczki: " + dbid);
         TextView textWys = getView().findViewById(R.id.text_wys);
-        textWys.setText("Najwyższy punkt: " + maxHeight +"m");
+        textWys.setText("Najwyższy punkt: " + maxHeight + "m");
     }
 
     public void onButtonPressed(Uri uri) {

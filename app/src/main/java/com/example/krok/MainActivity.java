@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity  implements Page1.OnFragment
         startService(new Intent(this, MService.class));
 
     }
+
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

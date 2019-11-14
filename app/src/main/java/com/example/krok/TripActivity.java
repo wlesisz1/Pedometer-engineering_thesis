@@ -80,9 +80,6 @@ public class TripActivity extends Fragment implements PermissionsListener, Page1
         super.onViewCreated(view, savedInstanceState);
         viewPager = getView().findViewById(R.id.view_pager);
 
-        Bundle celkrok = new Bundle();
-        celkrok.putString("cel_krok", "0");
-        setArguments(celkrok);
 
         SwipeAdapter swipeAdapter = new SwipeAdapter(getFragmentManager());
         viewPager.setAdapter(swipeAdapter);
@@ -104,20 +101,15 @@ public class TripActivity extends Fragment implements PermissionsListener, Page1
             @Override
             public void onClick(View v) {
                 if (RecordStart == false) {
-
                     final View view = getLayoutInflater().inflate(R.layout.askfornamealert, null);
                     AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                     alertDialog.setTitle("Wpisz nazwe wycieczki:");
-
                     alertDialog.setCancelable(false);
-
-
                     final EditText etComments = (EditText) view.findViewById(R.id.etComments);
                     etComments.setText("Trip");
                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_on));
                             RecordStart = true;
                             Cursor cursor = db2helper.GetTripNames(getActivity());
@@ -129,43 +121,32 @@ public class TripActivity extends Fragment implements PermissionsListener, Page1
                                     isUsed = true;
                                 }
                             }
-//                    Log.println(Log.ASSERT, "ass", cursor.getString(1));
                             if (isUsed)
                                 Toast.makeText(getContext(), "Ta nazwa jest zajeta!", Toast.LENGTH_SHORT).show();
                             else {
-                                //   Toast.makeText(getContext(), String.valueOf(cursor.isAfterLast()), Toast.LENGTH_SHORT).show();
                                 if (cursor.getCount() == 0) {
                                     ID = etComments.getText().toString();
                                     Toast.makeText(getContext(), "NoDB", Toast.LENGTH_SHORT).show();
                                     db2helper.AddTripIDAndCreateTable(getActivity(), ID);
-
                                 } else {
-
                                     cursor.moveToLast();
                                     ID = etComments.getText().toString();
                                     db2helper.AddTripIDAndCreateTable(getActivity(), ID);
                                 }
                                 startService(getView(), ID);
                                 SpinnerDataChange();
-
                             }
                             cursor.close();
                         }
                     });
-
-
                     alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             alertDialog.dismiss();
                         }
                     });
-
-
                     alertDialog.setView(view);
                     alertDialog.show();
-
-
                 } else {
                     RecordButton.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.record_off));
                     RecordStart = false;
@@ -173,9 +154,7 @@ public class TripActivity extends Fragment implements PermissionsListener, Page1
                 }
             }
         });
-
         SpinnerDataChange();
-
     }
 
 
@@ -215,46 +194,34 @@ public class TripActivity extends Fragment implements PermissionsListener, Page1
     public void SpinnerDataChange() {
         Cursor cursor = db2helper.GetTripNames(getActivity());
         cursor.moveToFirst();
-
         TripsListView = getView().findViewById(R.id.listoftrips);
-
-
         ArrayList<String> Items = new ArrayList<>();
-        Log.println(Log.ASSERT, "ass", String.valueOf(cursor.getCount()));
         while (!cursor.isAfterLast()) {
-
-            Log.println(Log.ASSERT, "ass", cursor.getString(0));
             Items.add(cursor.getString(0));
             cursor.moveToNext();
         }
         Object[] temp = Items.toArray();
         String[] items = Arrays.copyOf(temp, temp.length, String[].class);
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         TripsListView.setAdapter(adapter);
         cursor.close();
         TripsListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                 SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString( "selected_tripID", items[position] );
+                editor.putString("selected_tripID", items[position]);
 
                 editor.commit();
-           SwipeAdapter swipeAdapter = new SwipeAdapter(getFragmentManager());
-                ViewPager t =  getView().findViewById(R.id.view_pager);
-               t.setAdapter(swipeAdapter);
+                SwipeAdapter swipeAdapter = new SwipeAdapter(getFragmentManager());
+                ViewPager t = getView().findViewById(R.id.view_pager);
+                t.setAdapter(swipeAdapter);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
-
     }
     @Override
     public void onFragmentInteraction(Uri uri) {

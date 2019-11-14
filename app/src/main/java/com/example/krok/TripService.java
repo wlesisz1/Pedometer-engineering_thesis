@@ -155,20 +155,18 @@ public class TripService extends Service implements OnMapReadyCallback {
     public int onStartCommand(Intent intent, int flags, int startId) {
         mSensorManager.registerListener(mSensorEventListener, mStepCounter,
                 SensorManager.SENSOR_DELAY_FASTEST);
-
         mSensorManager.registerListener(mSensorEventListener2, mPressureSensor,
                 SensorManager.SENSOR_DELAY_FASTEST);
         db2helper = new SampleSQLiteDBHelper(getApplication());
         String input = intent.getStringExtra("inputExtra");
         ID=input;
-        String channelName = "My Background Service";
+        String channelName = "Trip recording";
         NotificationChannel chan = new NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH);
         chan.setLightColor(Color.BLUE);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         assert manager != null;
         manager.createNotificationChannel(chan);
-        Log.println(Log.ASSERT, "test", "testuje");
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID);
         Notification notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.drawable.wycieczki_24dp)
@@ -178,7 +176,6 @@ public class TripService extends Service implements OnMapReadyCallback {
                 .build();
         startForeground(1, notification);
         initLocationEngine();
-        timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 600000);
         timer.scheduleAtFixedRate(new SaveTripDataToDB(), 0, 10000);
         timer.scheduleAtFixedRate(new updatePressureOW(), 0, 900000);
         return START_NOT_STICKY;
@@ -282,7 +279,6 @@ public class TripService extends Service implements OnMapReadyCallback {
          */
         @Override
         public void onFailure(@NonNull Exception exception) {
-            Log.d("LocationChangeActivity", exception.getLocalizedMessage());
             TripService activity = activityWeakReference.get();
             if (activity != null) {
                 Toast.makeText(activity, exception.getLocalizedMessage(),
@@ -297,16 +293,7 @@ public class TripService extends Service implements OnMapReadyCallback {
         public void run() {
             Float x=Float.valueOf(X), y=Float.valueOf(Y);
             int Steps=0, Height=0;
-
-            Log.println(Log.ASSERT, "test", X);
-            /* TODO:
-            *   1. GPS Data +
-            *   2. Steps Data +
-            *   3. Height Data */
-
-
-Log.println(Log.ASSERT, "Zapisalem takie dane: ", "X = " + x.toString() + "; Y = " + y.toString() + "; step_C = " + String.valueOf(step_C)  + "; height = " +String.valueOf(height));
-        db2helper.AddTripMeasurement(getApplication(), x,y,ID,height,step_C);
+            db2helper.AddTripMeasurement(getApplication(), x,y,ID,height,step_C);
         }
 
     }

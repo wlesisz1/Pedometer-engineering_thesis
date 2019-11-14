@@ -113,25 +113,20 @@ public class Page2 extends Fragment {
         mChart = getView().findViewById(R.id.linechart);
         ArrayList<Entry> yValues = new ArrayList<>();
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
         String dbid = sharedPref.getString("selected_tripID", "empty");
-
         try {
             Cursor cursor = db2helper.GetTrip(getContext(), dbid);
-
             cursor.moveToFirst();
             int bigg = 0;
-            int small=999999;
+            int small = 999999;
             while (cursor.moveToNext()) {
                 if (cursor.getInt(2) > 0) {
                     yValues.add(new Entry(cursor.getInt(3), cursor.getInt(2)));
-
-                Log.println(Log.ASSERT, "yValues", String.valueOf(cursor.getInt(2)));
-                if (bigg < cursor.getInt(2))
-                    bigg = cursor.getInt(2);
+                    if (bigg < cursor.getInt(2))
+                        bigg = cursor.getInt(2);
                     if (small > cursor.getInt(2))
                         small = cursor.getInt(2);
-            }
+                }
             }
             LineDataSet set1 = new LineDataSet(yValues, "Wysokość");
             set1.setColor(Color.RED);
@@ -145,12 +140,12 @@ public class Page2 extends Fragment {
             mChart.getAxisLeft().setAxisMaximum(2 * bigg);
             mChart.getAxisRight().setAxisMinimum(0f);
             mChart.getAxisRight().setAxisMaximum(2 * bigg);
-            mChart.zoomToCenter(1,3);
-            mChart.moveViewTo(1,(small+bigg)/2, YAxis.AxisDependency.RIGHT);
+            mChart.zoomToCenter(1, 3);
+            mChart.moveViewTo(1, (small + bigg) / 2, YAxis.AxisDependency.RIGHT);
             mChart.setData(data);
             cursor.close();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
 
     }

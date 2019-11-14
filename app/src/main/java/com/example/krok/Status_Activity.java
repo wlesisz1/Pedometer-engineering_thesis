@@ -55,7 +55,30 @@ import static android.content.Context.SENSOR_SERVICE;
 public class Status_Activity extends Fragment implements StepsHistory.OnFragmentInteractionListener {
 
 
-
+    protected static final String OPEN_WEATHER_MAP_API = "https://api.openweathermap.org/data/2.5/weather?id=3083829&appid=ab705d098889a8e1258ef1073193aa5f";
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    Context context;
+    SampleSQLiteDBHelper db2helper;
+    Handler h = new Handler();
+    Handler h2 = new Handler();
+    int delay = 1000; //1 second=1000 milisecond,
+    Runnable runnable;
+    Runnable runnable2;
+    private float presure;
+    private float presure_0;
+    private int step_C;
+    private String max_s;
+    private float height;
+    private String date = "0";
+    private String todaysteps = "0";
+    private String mParam1;
+    private String mParam2;
+    private SensorManager mSensorManager;
+    private Sensor mStepCounter;
+    private Sensor mStepSensor2;
+    private Sensor mPressureSensor;
+    private Status_Activity.OnFragmentInteractionListener mListener;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -165,30 +188,7 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-    protected static final String OPEN_WEATHER_MAP_API = "https://api.openweathermap.org/data/2.5/weather?id=3083829&appid=ab705d098889a8e1258ef1073193aa5f";
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    Context context;
-    SampleSQLiteDBHelper db2helper;
-    Handler h = new Handler();
-    Handler h2 = new Handler();
-    int delay = 1000; //1 second=1000 milisecond,
-    Runnable runnable;
-    Runnable runnable2;
-    private float presure;
-    private float presure_0;
-    private int step_C;
-    private String max_s;
-    private float height;
-    private String date = "0";
-    private String todaysteps = "0";
-    private String mParam1;
-    private String mParam2;
-    private SensorManager mSensorManager;
-    private Sensor mStepCounter;
-    private Sensor mStepSensor2;
-    private Sensor mPressureSensor;
-    private Status_Activity.OnFragmentInteractionListener mListener;
+
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
         private float mStepOffset = 0;
 
@@ -383,10 +383,10 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
                 SensorManager.SENSOR_DELAY_FASTEST);
 
 
-        UstawWszystko();
+        SetText();
         h.postDelayed(runnable = new Runnable() {
             public void run() {
-                UstawWszystko();
+                SetText();
                 h.postDelayed(runnable, delay);
             }
         }, delay);
@@ -398,18 +398,17 @@ public class Status_Activity extends Fragment implements StepsHistory.OnFragment
         }, 1200000);
     }
 
-    public void UstawWszystko() {
-
-        TextView textView7 = getView().findViewById(R.id.steps_text);
-        textView7.setText("Zrobiłeś dzisiaj już " + String.format("%.0f", step_C - Float.valueOf(todaysteps)) + " kroków. Twój cel to: " + max_s);
-        TextView textView9 = getView().findViewById(R.id.map_text);
-        TextView textView10 = getView().findViewById(R.id.height_text);
+    public void SetText() {
+        TextView steps_text = getView().findViewById(R.id.steps_text);
+        steps_text.setText("Zrobiłeś dzisiaj już " + String.format("%.0f", step_C - Float.valueOf(todaysteps)) + " kroków. Twój cel to: " + max_s);
+        TextView map_text = getView().findViewById(R.id.map_text);
+        TextView height_text = getView().findViewById(R.id.height_text);
         height = Math.round(SensorManager.getAltitude(presure_0, presure));
-        textView10.setText("Aktualne ciśnienie: " + String.format("%.2f", presure) + "hPa.      " + "Estymowana wysokość: " + String.format("%.0f", height) + "m");
-
-     //   textView10.setText("Estymowana wysokość: " + String.format("%.0f", height) + "m");
-
+        height_text.setText("Aktualne ciśnienie: " + String.format("%.2f", presure) + "hPa.      " + "Estymowana wysokość: " + String.format("%.0f", height) + "m");
+        height_text.setText("Aktualne ciśnienie: " + String.format("%.2f", presure) + "hPa.      " + "Estymowana wysokość: " + String.format("%.0f", height) + "m");
     }
+
+
     @Override
     public void onPause() {
         super.onPause();

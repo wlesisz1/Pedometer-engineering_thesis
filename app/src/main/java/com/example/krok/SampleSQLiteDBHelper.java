@@ -114,13 +114,10 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public void AddTripMeasurement(Context context, Float X, Float Y, String Name, int HEIGHT, int STEP) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
-
         values.put(SampleSQLiteDBHelper.TRIP_X, X);
         values.put(SampleSQLiteDBHelper.TRIP_Y, Y);
         values.put(SampleSQLiteDBHelper.TRIP_HEIGHT, Integer.valueOf(HEIGHT));
         values.put(SampleSQLiteDBHelper.TRIP_STEP, Integer.valueOf(STEP));
-
             try {
                 database.insertOrThrow(SampleSQLiteDBHelper.TRIP_TABLE_NAME + Name, null, values);
             } catch (SQLException e) {

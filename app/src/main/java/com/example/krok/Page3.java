@@ -252,21 +252,10 @@ private Float CameraLat, CameraLong;
                                             .tilt(20)
                                             .build();
                                     mapboxMap.setCameraPosition(position);
-// Create the LineString from the list of coordinates and then make a GeoJSON
-// FeatureCollection so we can add the line to our map as a layer.
-
-
-
                                     style.addSource(new GeoJsonSource("line-source",
                                             FeatureCollection.fromFeatures(new Feature[] {Feature.fromGeometry(
                                                     LineString.fromLngLats(routeCoordinates)
                                             )})));
-
-
-
-
-// The layer properties for our line. This is where we make the line dotted, set the
-// color, etc.
                                     style.addLayer(new LineLayer("linelayer", "line-source").withProperties(
                                             //      PropertyFactory.lineDasharray(new Float[] {0.01f, 2f}),
                                             lineCap(Property.LINE_CAP_SQUARE),
@@ -285,40 +274,26 @@ private Float CameraLat, CameraLong;
     }
 
     private void initRouteCoordinates() {
-// Create a list to store our line coordinates.
         routeCoordinates = new ArrayList<>();
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
         String dbid = sharedPref.getString("selected_tripID", "empty");
-
-
-       Cursor cursor =  db2helper.GetTrip(getContext(), dbid);
-
-       cursor.moveToFirst();
-
-       CameraLat = cursor.getFloat(0);
-       CameraLong = cursor.getFloat(1);
-       while ( cursor.moveToNext()){
-       //    Log.println(Log.ASSERT, "tt", String.valueOf(cursor.getFloat(0)));
-           routeCoordinates.add(Point.fromLngLat(cursor.getFloat(1), cursor.getFloat(0)));
-
-       }
-
-
-        Log.println(Log.ASSERT, "size", String.valueOf(       routeCoordinates.size()));
+        Cursor cursor = db2helper.GetTrip(getContext(), dbid);
+        cursor.moveToFirst();
+        CameraLat = cursor.getFloat(0);
+        CameraLong = cursor.getFloat(1);
+        while (cursor.moveToNext()) {
+            routeCoordinates.add(Point.fromLngLat(cursor.getFloat(1), cursor.getFloat(0)));
+        }
     }
 
 
     public String GetStringGJSON() {
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-
         String dbid = sharedPref.getString("selected_tripID", "empty");
         String GJson = "";
         GJson += "{\"type\":\"FeatureCollection\",\"features\":[";
-
         if (dbid != "empty") {
             Cursor cursor = db2helper.GetTrip(getContext(), dbid);
-
             cursor.moveToFirst();
             while (cursor.moveToNext()) {
                 Float lat, lon, height;
@@ -328,8 +303,10 @@ private Float CameraLat, CameraLong;
                     float lat2 = cursor.getFloat(1);;
                     float lon2 = cursor.getFloat(0);;
                     height = cursor.getFloat(2);
-                    GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + (lon+0.0002) + "],[" + (lat+0.0002) + "," + lon + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + (height*2) + "}}";
-
+                    GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[["
+                            + lat + "," + lon + "],[" + lat + "," + (lon+0.0002) + "],[" + (lat+0.0002) + ","
+                            + (lon+0.0002) + "],[" + (lat+0.0002) + "," + lon + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":"
+                            + (height*2) + "}}";
                     // GJson += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[" + lat + "," + lon + "],[" + lat + "," + (lon+0.0001) + "],[" + lat2 + "," + (lon2+0.0001) + "],[" + lat2 + "," + lon2 + "],[" + lat + "," + lon + "]]]},\"properties\":{\"e\":" + (height*2) + "}}";
                     if (!cursor.isLast()) {
                         GJson += ",";

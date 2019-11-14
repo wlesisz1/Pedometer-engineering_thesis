@@ -30,7 +30,6 @@ public class SwipeAdapter extends FragmentStatePagerAdapter {
                 return "Informacje";
             case 1:
                 return "Wykres";
-
             case 2:
                 return "Mapa";
             default:
