@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Kroki"
-            android:textColor="#FFFF"
+            android:textColor="@color/textc"
             android:textSize="25dp">
 
 
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:text="Wysokość"
                 android:textSize="25dp"
-                android:textColor="#FFFF">
+                android:textColor="@color/textc">
 
             </TextView>
             <Button
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:text="Mapa"
                 android:textSize="25dp"
-                android:textColor="#FFFF">
+                android:textColor="@color/textc">
 
             </TextView>
         </LinearLayout>

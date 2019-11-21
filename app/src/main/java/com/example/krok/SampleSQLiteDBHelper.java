@@ -38,6 +38,8 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public static final String TRIP_Y = "_dimY";
     public static final String TRIP_STEP = "_step";
     public static final String TRIP_HEIGHT = "_height";
+    public static final String TRIP_DATE = "_date";
+
 
     public static final String STEPS_TABLE_NAME = "steps";
     public static final String STEPS_ID = "_id";
@@ -49,7 +51,7 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public static final String TRIPID = "_id";
     public static final String TRIPNAME = "_name";
 
-    private static final int DATABASE_VERSION = 121;
+    private static final int DATABASE_VERSION = 125;
 
     public SampleSQLiteDBHelper(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -88,7 +90,8 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
                 + TRIP_X + " DOUBLE, "
                 + TRIP_Y + " DOUBLE, "
                 + TRIP_HEIGHT + " INTEGER, "
-                + TRIP_STEP + " INTEGER);");
+                + TRIP_STEP + " INTEGER, "
+                + TRIP_DATE + " INTEGER);");
     }
 
     @Override
@@ -114,10 +117,13 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
     public void AddTripMeasurement(Context context, Float X, Float Y, String Name, int HEIGHT, int STEP) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        Calendar cal = Calendar.getInstance();
+        Date dateWithTime = cal.getTime();
         values.put(SampleSQLiteDBHelper.TRIP_X, X);
         values.put(SampleSQLiteDBHelper.TRIP_Y, Y);
         values.put(SampleSQLiteDBHelper.TRIP_HEIGHT, Integer.valueOf(HEIGHT));
         values.put(SampleSQLiteDBHelper.TRIP_STEP, Integer.valueOf(STEP));
+        values.put(SampleSQLiteDBHelper.TRIP_DATE, cal.getTimeInMillis());
             try {
                 database.insertOrThrow(SampleSQLiteDBHelper.TRIP_TABLE_NAME + Name, null, values);
             } catch (SQLException e) {
@@ -230,7 +236,7 @@ public class SampleSQLiteDBHelper extends SQLiteOpenHelper {
 
     public Cursor GetTrip(Context context, String Name) {
         SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.query(TRIP_TABLE_NAME+Name, new String[]{TRIP_X, TRIP_Y, TRIP_HEIGHT, TRIP_STEP}, null, null, null, null, null);
+        Cursor cursor = database.query(TRIP_TABLE_NAME+Name, new String[]{TRIP_X, TRIP_Y, TRIP_HEIGHT, TRIP_STEP, TRIP_DATE}, null, null, null, null, null);
         return cursor;
     }
 

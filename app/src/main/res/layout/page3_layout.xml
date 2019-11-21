@@ -29,10 +29,9 @@
         android:id="@+id/switch2d3d"
         android:layout_width="110dp"
         android:layout_height="50dp"
-
         android:text="Map 2D/3D"
         android:textColor="@color/blackC"
         android:layout_gravity="left"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         />
 </FrameLayout>

@@ -21,6 +21,11 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.data.Entry;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class Page1 extends Fragment {
     private static final String OPEN_WEATHER_MAP_API = "https://api.openweathermap.org/data/2.5/weather?id=3083829&appid=ab705d098889a8e1258ef1073193aa5f";
@@ -34,6 +39,7 @@ public class Page1 extends Fragment {
     String steps;
     String heightDiff;
     String maxHeight;
+    String exceedance;
     private String mParam1;
     private String mParam2;
 
@@ -79,22 +85,54 @@ public class Page1 extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String dbid = sharedPref.getString("selected_tripID", "empty");
-        int tempStepMin = 0, tempStepMax = 0, tempHMin = 0, tempHMax = 0;
+        int tempStepMin = 0, tempStepMax = 0, tempHMin = 0, tempHMax = 0, exceedanceInt =0;
+        int tempPrevious =0;
         int tempMaxH = 0;
+        String Duration ="";
         try {
             Cursor cursor = db2helper.GetTrip(getContext(), dbid);
             cursor.moveToFirst();
             cursor.moveToNext();
-            tempStepMin = cursor.getInt(3);
-            Log.println(Log.ASSERT, "tempStempMin", String.valueOf(tempStepMin));
-            cursor.moveToLast();
-            tempStepMax = cursor.getInt(3);
-            Log.println(Log.ASSERT, "tempStepMax", String.valueOf(tempStepMax));
-            cursor.moveToFirst();
-            while (cursor.moveToNext()) {
-                if (tempMaxH < cursor.getInt(2)) {
-                    tempHMax = cursor.getInt(2);
+            if (!cursor.isAfterLast()) {
+                tempStepMin = cursor.getInt(3);
+                Long firstT = cursor.getLong(4);
+                Log.println(Log.ASSERT, "tempStempMin", String.valueOf(tempStepMin));
+                cursor.moveToLast();
+
+
+                Long lastT = cursor.getLong(4);
+
+                Long dur =  lastT - firstT;
+                long second = (dur / 1000) % 60;
+                long minute = (dur / (1000 * 60)) % 60;
+                long hour = (dur / (1000 * 60 * 60)) % 24;
+
+
+                Log.println(Log.ASSERT, "dur", String.valueOf(dur));
+            //   Date date = originalFormat.parse(dur.toString());
+                Duration =  String.valueOf(hour + ":" + minute +":"+second);
+                tempStepMax = cursor.getInt(3);
+                Log.println(Log.ASSERT, "tempStepMax", String.valueOf(tempStepMax));
+                cursor.moveToFirst();
+                int[] table ={1,2,3};
+
+                tempPrevious=cursor.getInt(2);
+                while (cursor.moveToNext()) {
+                    if (tempMaxH < cursor.getInt(2)) {
+                        tempHMax = cursor.getInt(2);
+                    }
+                    if (tempPrevious==0)
+                        tempPrevious = cursor.getInt(2);
+                    else
+                    if (tempPrevious < cursor.getInt(2)) {
+                        exceedanceInt +=(cursor.getInt(2) - tempPrevious);
+                    }
+                    tempPrevious= cursor.getInt(2);
+
                 }
+
+
+
             }
             cursor.close();
 
@@ -104,12 +142,18 @@ public class Page1 extends Fragment {
 
         steps = String.valueOf(tempStepMax - tempStepMin);
         maxHeight = String.valueOf(tempHMax);
+        exceedance = String.valueOf(exceedanceInt);
         TextView textKroki = getView().findViewById(R.id.text_kroki);
         textKroki.setText("Ilość kroków: " + steps);
         TextView textNazwa = getView().findViewById(R.id.text_nazwa);
         textNazwa.setText("Nazwa wycieczki: " + dbid);
         TextView textWys = getView().findViewById(R.id.text_wys);
         textWys.setText("Najwyższy punkt: " + maxHeight + "m");
+
+        TextView textPrz = getView().findViewById(R.id.text_prz);
+        textPrz.setText("Pokanane przewyższenia: " + exceedance + "m");
+        TextView textTime = getView().findViewById(R.id.text_time);
+        textTime.setText("Czas trwania: " + Duration);
     }
 
     public void onButtonPressed(Uri uri) {

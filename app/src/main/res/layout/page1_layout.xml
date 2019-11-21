@@ -33,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Nazwa"
-                    android:textColor="#FFFF"
+                    android:textColor="@color/textc"
                     android:textSize="25dp">
 
 
@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Kroki"
-                    android:textColor="#FFFF"
+                    android:textColor="@color/textc"
                     android:textSize="25dp">
 
                 </TextView>
@@ -94,10 +94,68 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Wysokość"
-                    android:textColor="#FFFF"
+                    android:textColor="@color/textc"
                     android:textSize="25dp">
 
                 </TextView>
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+
+        android:layout_height="80dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/card_prz"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/step_gradient">
+
+
+            <TextView
+                android:id="@+id/text_prz"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Wysokość"
+                android:textColor="@color/textc"
+                android:textSize="25dp">
+
+            </TextView>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+
+        android:layout_height="80dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        >
+
+        <LinearLayout
+            android:id="@+id/card_TIME"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/step_gradient">
+
+
+            <TextView
+                android:id="@+id/text_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Czas"
+                android:textColor="@color/textc"
+                android:textSize="25dp">
+
+            </TextView>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
     </TableLayout>
